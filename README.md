@@ -1,2 +1,8 @@
-# db-mysql
-db-mysql
+# Mysql
+## Init
+```sql
+SHOW DATABASES;
+CREATE DATABASE user;
+use user;
+```
+
