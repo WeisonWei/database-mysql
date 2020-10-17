@@ -1,0 +1,167 @@
+#https://github.com/openzipkin/docker-zipkin/blob/master/docker-compose.yml
+
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0.16
+    environment:
+      - MYSQL_ROOT_PASSWORD=123123
+      - MYSQL_USER=demo
+      - MYSQL_DATABASE=demo
+      - MYSQL_PASSWORD=123123
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql.ini:/etc/mysql/conf.d/my.cnf
+      - ./init-mysql.sql:/docker-entrypoint-initdb.d/1-init-mysql.sql
+      - ./init-master.sql:/docker-entrypoint-initdb.d/1-init-master.sql
+    command: [
+      "--log-bin=mysql-bin",
+      "--binlog-format=ROW",
+      "--server-id=1",
+      "--sync_binlog=1"
+    ]
+    ports:
+      - 3306:3306
+    networks:
+      - net
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:4.0.10
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123123
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - 27017:27017
+      - 27018:27018
+      - 27019:27019
+    networks:
+      - net
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3.7-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=123123
+      - RABBITMQ_DEFAULT_VHOST=demo
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - 15672:15672
+      - 5671:5671
+      - 5672:5672
+    networks:
+      - net
+    restart: unless-stopped
+  
+  activemq:
+    image: rmohr/activemq:5.15.9
+    ports:
+      - 61616:61616 # JMS
+      - 8161:8161 # UI
+      #- 5672:5672 # AMQP
+      - 61613:61613 # STOMP
+      - 1883:1883 # MQTT
+      - 61614:61614 # WS 
+    volumes:
+      - activemq_data:/opt/activemq/data
+    networks:
+      - net
+    restart: unless-stopped
+    
+  redis:
+    image: redis:5.0.5
+    volumes:
+      - redis_data:/var/lib/redis
+    ports:
+      - 6379:6379
+    networks:
+      - net
+    restart: unless-stopped
+
+#  elastic:
+#    image: elasticsearch:6.8.1
+#    environment:
+#      - discovery.type=single-node
+#    volumes:
+#      - elastic_data:/usr/share/elasticsearch/data
+#    ports:
+#      - 9200:9200
+#      - 9300:9300
+#    networks:
+#      - net
+#    restart: unless-stopped
+
+  postgres:
+    image: postgres:12.1
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123123
+      - POSTGRES_DB=actividb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+#  keycloak:
+#    image: activiti/activiti-keycloak
+#    ports:
+#      - 8180:8180
+#    networks:
+#      - net
+#    restart: unless-stopped
+  
+  rocketmq:
+    image: apacherocketmq/rocketmq:4.5.0-alpine
+    ports:
+      - 9876:9876
+    command: sh mqnamesrv
+  rmqbroker:
+    image: apacherocketmq/rocketmq:4.5.0-alpine
+    environment:
+      - NAMESRV_ADDR=rocketmq:9876
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    volumes:
+      #- rocketmq_logs:/home/rocketmq/logs
+      #- rocketmq_store:/home/rocketmq/store
+      - ./broker-${docker_ip}.conf:/opt/rocketmq-4.5.0/conf/broker.conf
+    command: "sh mqbroker -c /opt/rocketmq-4.5.0/conf/broker.conf autoCreateTopicEnable=true"
+    depends_on:
+      - rocketmq
+    
+  rocketmq-ui:
+    image: styletang/rocketmq-console-ng
+    environment:
+      - JAVA_OPTS=-Drocketmq.namesrv.addr=rocketmq:9876
+    ports:
+      - 10913:8080
+    depends_on:
+      - rocketmq
+
+
+volumes:
+  mysql_data:
+  mongo_data:
+  rabbitmq_data:
+  redis_data:
+  elastic_data:
+  postgres_data:
+  activemq_data:
+  rocketmq_data:
+  rocketmq_logs:
+  rocketmq_store:
+networks:
+  net:
