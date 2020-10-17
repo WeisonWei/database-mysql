@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-sudo docker run -p 23306:3306 --name mysql-volum \
--v /Users/admin/mysql/conf:/etc/mysql \
--v /Users/admin/mysql/logs:/var/log/mysql \
--v /Users/admin/mysql/data:/var/lib/mysql \
+dir=`pwd`
+docker run -p 23306:3306 --name mysql-volum \
+-v ${dir}/volum/mysql1/conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf \
+-v ${dir}/volum/mysql1/logs:/var/log/mysql \
+-v ${dir}/volum/mysql1/data:/var/lib/mysql \
 -e MYSQL_ROOT_PASSWORD=123123123 \
 -d mysql
 
@@ -14,7 +15,13 @@ sudo docker run -p 23306:3306 --name mysql-volum \
 #-e MYSQL_ROOT_PASSWORD=123456：初始化root用户的密码
 #-d: 后台运行容器，并返回容器ID
 #imageID: mysql镜像ID
-
+#@–restart always：开机启动
+#–privileged=true：提升容器内权限
+#-v /opt/mysql/config/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf：映射配置文件
+#-v /opt/mysql/data:/var/lib/mysql：映射数据目录
+#-e MYSQL_USER=”fengwei”：添加用户fengwei
+#-e MYSQL_PASSWORD=”pwd123”：设置fengwei的密码伟pwd123
+#-e MYSQL_ROOT_PASSWORD=”rootpwd123”：设置root的密码伟rootpwd123
 
 #登陆验证
 #sudo docker exec -it mysql bash
