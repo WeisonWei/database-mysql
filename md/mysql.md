@@ -15,7 +15,7 @@
 ## 锁
 ## 引擎
 
-## Binglog
+## binlog
 ## redo
 ## undo
 
