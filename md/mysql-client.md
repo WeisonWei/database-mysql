@@ -1,34 +1,17 @@
 # MySQL
 
-## 数据类型
-## 约束 主键 外键
-## 数据结构
-## 索引
+## 服务器&客户端
+`MySQL`客户端进程的默认名称为`mysql`
 
-## 事务
-## 事务隔离级别
-## 索引
+## 客户端&服务器连接
+`MySQL`采用`TCP`作为服务器和客户端之间的网络通信协议。
 
-## sql语法
+```shell script
+#指定端口启动
+mysqld -P3307
+#连接
+mysql -h127.0.0.1 -uroot -P3307 -p
 
-## 架构
-## 锁
-## 引擎
-
-## binlog
-## redo
-## undo
-
-## 执行计划
-
-
-## 附录
-
-- 给root赋权限
-
-```bash
-grant all privileges on *.* to 'root'@'%' ;
-flush privileges;  
 ```
 
 [深入理解 MySQL 底层实现](https://gitbook.cn/gitchat/activity/5a07c4266a4b0d78856826ea)

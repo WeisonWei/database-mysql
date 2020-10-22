@@ -99,6 +99,10 @@ CREATE TABLE 表名(
     建表语句;
 ) ENGINE = 存储引擎名称;
 ALTER TABLE engine_demo_table ENGINE = InnoDB;
+
+SHOW CREATE TABLE engine_demo_table
+
+
 ```
 
 [深入理解 MySQL 底层实现](https://gitbook.cn/gitchat/activity/5a07c4266a4b0d78856826ea)
