@@ -105,6 +105,10 @@ SHOW CREATE TABLE engine_demo_table
 
 ```
 
+对于16KB的页来说，连续的64个页就是一个区，一个区默认占用1MB空间大小；
+不论是系统表空间还是独立表空间，都可以看成是由若干个区组成的，每256个区被划分成一组。
+
+
 [深入理解 MySQL 底层实现](https://gitbook.cn/gitchat/activity/5a07c4266a4b0d78856826ea)
 [MySQL 索引与优化](https://gitbook.cn/books/5c92fd312cc79178471b68db/index.html)
 [138 张图带你 MySQL 入门](https://gitbook.cn/books/5eef6f0335d2480b101d7552/index.html)
