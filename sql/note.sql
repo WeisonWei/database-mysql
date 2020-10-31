@@ -29,4 +29,31 @@ WHERE
  AND a.account_type = 2
  AND a.balance > 0
 GROUP BY
- a.uid
+ a.uid;
+
+-- 两表强一致 关联
+-- 两表不一致 连接
+select
+    subject as 科目,
+    orderType as '课程类型',
+    sum(allcount) as '课程总支付单数',
+    sum(weixincount) as '微信支付总数',
+    sum(alicount) as '支付宝支付总数',
+    sum(jsapi) as '微信内部jsapi支付总数',
+    sum(app) as '微信app支付总数',
+    sum(mweb) as '微信浏览器支付总数'
+from (select if(a.subject = 0, '美术课', '写字课') as subject,a.regtype,
+             if(a.regtype = 1, '体验课', '系统课') as orderType,
+             count(a.id) as allcount,
+             count(if(opp.trade_type in ('JSAPI','APP','MWEB'), true, null )) as weixincount,
+             count(if(opp.trade_type in ('WAP'), true, null )) as alicount,
+             count(if(opp.trade_type in ('JSAPI'), true, null )) as jsapi,
+             count(if(opp.trade_type in ('APP'), true, null )) as app,
+             count(if(opp.trade_type in ('MWEB'), true, null )) as mweb
+      from o_order a left join o_payment_pay opp on a.id = opp.oid
+      where a.regtype in (1, 2, 3) and a.`status` = 3 and  opp.type=1 and opp.trade_type in ('JSAPI','APP','MWEB','WAP') group by a.subject,a.regtype) aa group by subject,orderType
+order by 1,2;
+
+select count(id) from u_user_extends c where c.subject =0  and c.send_id >0
+                                         and not exists(select id from o_order a where a.uid = c.u_id and a.status = 3 and a.regtype in (1,2,3))
+                                         and exists(select id from u_user_logindata b where b.uid = c.u_id and b.login_time between 1603382400000 and 1603987200000);
