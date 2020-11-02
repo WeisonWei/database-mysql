@@ -55,3 +55,6 @@ select date_sub(@dt, interval '01:15:30' hour_second);
 select datediff('2008-08-08', '2008-08-01'); -- 7
 
 select convert_tz('2008-08-08 12:00:00', '+08:00', '+00:00'); -- 2008-08-08 04:00:00
+
+
+-- 时间格式化 https://www.w3school.com.cn/sql/func_date_format.asp
