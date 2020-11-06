@@ -23,3 +23,11 @@ mysqlbinlog -vv --base64-output='decode-rows' #{binlogid} | grep test -A30 -B30
 #查看 binlog 中指定 gtid 出现的前后 20 行
 mysqlbinlog -vv --base64-output='decode-rows' #{binlogid} | grep '****-gtid-****' -A30 -B30
 ```
+
+```bash
+show variables like 'log_bin';
+show variables like 'datadir';
+```
+
+-- https://www.cnblogs.com/lvnux/p/13503344.html
+
