@@ -13,13 +13,11 @@
 -- Extra 	一些额外的信息
 ```
 
-
-```bash
-explain select * from u_user c where c.mobile = 18702966632;
-EXPLAIN SELECT 1;
-
-drop table single_table;
-CREATE TABLE single_table (
+## init
+- table
+```sql
+drop table t1;
+CREATE TABLE t1 (
     id INT NOT NULL AUTO_INCREMENT,
     key1 VARCHAR(100),
     key2 INT,
@@ -34,6 +32,32 @@ CREATE TABLE single_table (
     KEY idx_key3 (key3),
     KEY idx_key_part(key_part1, key_part2, key_part3)
 ) Engine=InnoDB CHARSET=utf8;
+```
+
+- proc_auto_insert_data
+```sql
+ DELIMITER $$
+    DROP PROCEDURE IF EXISTS `proc_auto_insert_data`$$
+    CREATE PROCEDURE `proc_auto_insert_data`()
+    BEGIN
+
+            DECLARE init_data INTEGER DEFAULT 1;
+
+            WHILE init_data <= 10000 DO
+
+	INSERT INTO t1 VALUES(init_data,concat(init_data,''),init_data,concat(init_data,''),concat(init_data,''),concat(init_data,''),concat(init_data,''),concat(init_data,''));
+
+            SET init_data = init_data + 1;
+
+            END WHILE;
+    END$$
+    DELIMITER ;
+    CALL proc_auto_insert_data();
+```
+
+```bash
+explain select * from u_user c where c.mobile = 18702966632;
+EXPLAIN SELECT 1;
 ```
 
 
