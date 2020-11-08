@@ -107,3 +107,32 @@ SELECT * FROM information_schema.OPTIMIZER_TRACE;
 # 5. 当你停止查看语句的优化过程时，把optimizer trace功能关闭
 SET optimizer_trace="enabled=off";
 ```
+
+
+## practise
+
+```sql
+-- explain FORMAT=JSON
+select * from s1;
+SHOW WARNINGS;
+
+-- explain
+select * from s1 where key1 = '9';
+
+-- explain
+select * from s1 inner join s2;
+
+-- explain
+select * from s1 inner join s2 on s1.key1 = s2.key1
+where s1.common_field = '9';
+
+-- explain
+select * from s1 where key1 in (select key3 from s2);
+
+-- explain
+select * from s1  union select * from s2;
+SHOW WARNINGS;
+
+SHOW VARIABLES LIKE 'optimizer_trace';
+SET optimizer_trace="enabled=on";
+```
