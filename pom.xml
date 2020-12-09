@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.weison</groupId>
-    <artifactId>db-mysql</artifactId>
+    <artifactId>database-mysql</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 

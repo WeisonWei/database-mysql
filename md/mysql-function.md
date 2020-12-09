@@ -128,7 +128,7 @@ SUM([DISTINCT] expr )返回expr 的总数。 若返回集合中无任何行，�
 ## 案例
 
 ```sql
-elect distinct(c.source_uid)                                                   邀请人UID,
+select distinct(c.source_uid)                                                   邀请人UID,
                c.source_name                                                    邀请人昵称,
                count(c.target_uid)                                              邀请人数,
                sum(c.base_amount)                                               基础收益,

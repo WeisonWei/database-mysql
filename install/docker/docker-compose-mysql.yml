@@ -1,0 +1,37 @@
+#https://github.com/openzipkin/docker-zipkin/blob/master/docker-compose.yml
+
+version: '3'
+
+services:
+  mysql-compose:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=123123123
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_USER=admin
+      - MYSQL_DATABASE=user
+      - MYSQL_PASSWORD=123123123
+    volumes:
+      - ${dir}/mysql2/data:/var/lib/mysql
+      - ${dir}/mysql2/conf/mysqld.cnf:/etc/mysql/conf.d/my.cnf
+      - ${dir}/mysql2/init-mysql.sql:/docker-entrypoint-initdb.d/1-init-mysql.sql
+    command: [
+      "--log-bin=mysql-bin",
+      "--binlog-format=ROW"
+    ]
+    ports:
+      - 13306:3306
+    networks:
+      - net
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    restart: unless-stopped
+
+
+volumes:
+  mysql_data:
+networks:
+  net:
